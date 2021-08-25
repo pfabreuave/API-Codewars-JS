@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="estilosa.css">
+	<title>APIcodeward</title>
+</head>
+<body>
+	<form>
+				<div id="avatar"> </div>
+				<h3 id=nombre ></h3>
+				<h3 id=totales ></h3>
+				<h2 class="title">Desafios Codewars</h2>
+					<input 
+						type="text" 
+						class="userInput" 
+						id="usercw"		
+						placeholder="Buscar usuario"
+					/>
+					<input 
+						type="button"
+						class="searchButton" 
+						value="Buscar" 
+						onclick="buscaCW()"
+					/>			
+	</form>
+	<header>
+		 <div class="img">
+		 </div> 
+		<div id="contenido"></div>	
+	</header>
+<script type="text/javascript">
+	var cont = Number(0);
+	var I = Number(0);
+	var J = Number(0);
+	var foto = [];
+	var id = [];
+	var codeChallenges = [];
+	var fecha_conquista = [];
+	var nombre_conquista = [];
+	var id_conquista = [];
+    var url_users = ' ';
+    var url_conquista = ' ';
+    var url_desafio = ' ';
+    var kyu = [];
+    var conquistas = Number(0)
+    function Create2DArray() {
+  							for (k=0;k<9;k++) {
+								kyu[k] = Number(0);
+ 				 			}
+  					return kyu;
+					}
+	function buscaCW(filtro) {		
+		avatar.innerHTML = ' '
+		nombre.innerHTML = ' '
+		contenido.innerHTML = ' '
+        totales.innerHTML = ' ';
+        codeChallenges= [];
+        id = [];
+        cont = Number(0);
+        foto = [];
+        I = Number(1);
+        J = Number(0);
+        fecha_conquista = [];
+        nombre_conquista = [];
+        id_conquista = [];
+        usercw = document.getElementById("usercw");
+		url_users = "https://www.codewars.com/api/v1/users/" + usercw.value;
+		fetch(url_users, {method: 'GET'})
+			.then(function(response){
+				return response.json()
+			})
+			.then(function(users){
+                conquistas = users.codeChallenges.totalCompleted 
+                nombre.innerHTML +=`<img  class= imagen src='https://www.codewars.com/users/${usercw.value}/badges/large' alt='Kata Kyu'/>`
+                nombre.innerHTML +=`<h3>  ${users.name} </h3>`
+				nombre.innerHTML +=`<h3> Honor  ${users.honor} Posicion ${users.leaderboardPosition}</h3>`
+				nombre.innerHTML +=`<h3> Desafios Completados ${users.codeChallenges.totalCompleted}
+										 Nivel ${users.ranks.overall.name}
+					 			   </h3>`                                        
+				})
+			.catch(function(error) {
+				nombre.innerHTML = ' '
+                avatar.innerHTML +=`<img  class=imgerr src='img/pare.jpg'>`
+				nombre.innerHTML +=`<h3 class='title'>  Usuário não encontrado, por favor tente outro </h3>`	
+            });
+        Create2DArray()    		
+		url_conquista = "https://www.codewars.com/api/v1/users/" + usercw.value + "/code-challenges/completed?page=0";
+		contenido.innerHTML = ' '
+        totales.innerHTML = ' ';
+		fetch(url_conquista, {method: 'GET'})
+			.then(function(response){
+				return response.json()
+			})
+			.then(function(data){
+				contenido.innerHTML = ' '
+				for(cont=0;cont<data.data.length;cont++){ 	
+					fecha_conquista.push(data.data[cont].completedAt.substr(0, 10))
+					nombre_conquista.push(data.data[cont].name)
+					id_conquista.push(data.data[cont].id)
+					url_desafio = 'https://www.codewars.com/api/v1/code-challenges/'+data.data[cont].id;
+					const getpost = async () => {	
+						const response = await fetch(url_desafio)
+						const data = await response.json()
+						codeChallenges.push(data)
+						id.push(codeChallenges[J].id)
+						if (J == id_conquista.length-1) {
+							for (let i = 0; i < id_conquista.length; i++) {
+								var x = id.indexOf(id_conquista[i]);
+								Number(foto.push(codeChallenges[x].rank.name.substr(0, 1)))
+								if(filtro === undefined){
+									contenido.innerHTML +=` <div class="card">
+									<img  class=peq src='img/k${foto[i]}.png'>	
+									<a href='https://www.codewars.com/kata/${id_conquista[i]}' " target="blank_">	   
+									${fecha_conquista[i]} ==> ${nombre_conquista[i]}</a>		
+									</div>`
+								} else {
+										if(filtro == foto[i]){
+											contenido.innerHTML +=` <div class="card">
+											<img  class=peq src='img/k${foto[i]}.png'>	
+											<a href='https://www.codewars.com/kata/${id_conquista[i]}' " target="blank_">	   
+											${fecha_conquista[i]} ==> ${nombre_conquista[i]}</a>		
+											</div>`
+										}
+									}		
+                                var k = Number(foto[i])
+                                kyu[k] = Number(kyu[k] + 1)
+                                if (conquistas === 1){   
+                                    for ( k = kyu.length - 1; k >= 1; k--) {
+                                        totales.innerHTML +=`
+                                        <img onclick="buscaCW(${k})" class=peqtotal src='img/k${k}.png'><b class=resultado>${kyu[k]}</b>
+                                        `         
+                                    }  
+                                }
+                                conquistas--
+							}	
+						}
+						J++
+					}
+					getpost()	
+				}
+				contenido.innerHTML = ' ';
+				totales.innerHTML = ' ';
+            })
+			contenido.innerHTML = ' ';
+			avatar.innerHTML = ' '; 				
+			nombre.innerHTML = ' ';
+            totales.innerHTML = ' ';
+	}
+	avatar.innerHTML = ' ';
+	nombre.innerHTML = ' ';
+	contenido.innerHTML = ' ';
+    totales.innerHTML = ' ';	
+</script>
+</body>
+</html>
