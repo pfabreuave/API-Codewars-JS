@@ -7,6 +7,7 @@
 		const queryString = window.location.search;
 		const urlParams = new URLSearchParams(queryString);
 		const varUser = urlParams.get('user');
+		
 	</script>
 </head>
 <body>
@@ -48,6 +49,7 @@
     var url_desafio = ' ';
     var kyu = [];
     var conquistas = Number(0)
+	
     function Create2DArray() {
   							for (k=0;k<9;k++) {
 								kyu[k] = Number(0);
@@ -156,11 +158,12 @@
 	contenido.innerHTML = ' ';
     totales.innerHTML = ' ';
 
-	 document.getElementById('usergh').value = varUser;
+	document.getElementById('usercw').value = varUser;
 	 
 	  if (varUser > " ") {
 		buscaCW();
-	  }	
+	  }
+	
 </script>
 </body>
 </html>
