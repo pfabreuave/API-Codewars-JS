@@ -3,6 +3,11 @@
 <head>
 	<link rel="stylesheet" href="estilosa.css">
 	<title>APIcodeward</title>
+	<script>
+		const queryString = window.location.search;
+		const urlParams = new URLSearchParams(queryString);
+		const varUser = urlParams.get('user');
+	</script>
 </head>
 <body>
 	<form>
@@ -149,7 +154,13 @@
 	avatar.innerHTML = ' ';
 	nombre.innerHTML = ' ';
 	contenido.innerHTML = ' ';
-    totales.innerHTML = ' ';	
+    totales.innerHTML = ' ';
+
+	 document.getElementById('usergh').value = varUser;
+	 
+	  if (varUser > " ") {
+		buscaCW();
+	  }	
 </script>
 </body>
 </html>
